@@ -110,6 +110,25 @@ public class Bag implements IBag
     @Override
     public boolean remove(Object element)
     {
+        //search for the element
+        for (int i = 0; i < nextAvailableIndex; i++)
+        {
+            //if we found it!
+            if (dataArray[i].equals(element))
+            {
+                //shift all higher indices down one spot
+                for (int j = i; j < nextAvailableIndex && j < dataArray.length; j++)
+                {
+                    dataArray[i] = dataArray[i + 1];
+                }
+
+                //clear the newly available spot and decrement next available index
+                dataArray[nextAvailableIndex - 1] = null;
+                nextAvailableIndex--;
+
+                return true; //found it!
+            }
+        }
         return false;
     }
 
@@ -120,7 +139,14 @@ public class Bag implements IBag
     @Override
     public void clear()
     {
+        //reset occuppied indices
+        for (int i = 0; i < nextAvailableIndex; i++)
+        {
+            dataArray[i] = null;
+        }
 
+        //reset next available index
+        nextAvailableIndex = 0;
     }
 
     /**
