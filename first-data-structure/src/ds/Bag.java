@@ -1,6 +1,8 @@
 package ds;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Random;
 
 /**
  * A simple data structure with the properties:
@@ -11,10 +13,10 @@ import java.util.Arrays;
  * @author Josh Archer
  * @version 1.0
  */
-public class Bag implements IBag
+public class Bag<T> implements IBag<T>, Iterable<T>
 {
     //fields to store the data and track the status of the bag?
-    private Object[] dataArray;
+    private T[] dataArray;
     private int nextAvailableIndex;
 
     /**
@@ -30,7 +32,7 @@ public class Bag implements IBag
             throw new IllegalArgumentException("Bag capacity must be positive.");
         }
 
-        dataArray = new Object[capacity];
+        dataArray = (T[])new Object[capacity];
     }
 
     /**
@@ -41,7 +43,7 @@ public class Bag implements IBag
      * @return true if the element was added, otherwise false
      */
     @Override
-    public boolean add(Object element)
+    public boolean add(T element)
     {
         //precondition
         if (nextAvailableIndex == dataArray.length)
@@ -82,7 +84,7 @@ public class Bag implements IBag
      * @return true if found, or false otherwise
      */
     @Override
-    public boolean contains(Object element)
+    public boolean contains(T element)
     {
         //NOTE: we only need to loop through the occupied indices
         //and not to the end of the array necessarily
@@ -108,7 +110,7 @@ public class Bag implements IBag
      * or false otherwise
      */
     @Override
-    public boolean remove(Object element)
+    public boolean remove(T element)
     {
         //search for the element
         for (int i = 0; i < nextAvailableIndex; i++)
@@ -149,6 +151,24 @@ public class Bag implements IBag
         nextAvailableIndex = 0;
     }
 
+    public T pickOne()
+    {
+        if (size() == 0)
+        {
+            throw new IllegalStateException("Bag is empty!");
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(nextAvailableIndex);
+        return dataArray[index];
+    }
+
+    @Override
+    public Iterator<T> iterator()
+    {
+        return new BagIterator();
+    }
+
     /**
      * Prints out a visualization of the bag as a string.
      * @return the bag contents
@@ -158,6 +178,30 @@ public class Bag implements IBag
     {
         //print out the data array in "pretty print" form
         return "Bag: " + Arrays.toString(dataArray);
+    }
+
+    private class BagIterator implements Iterator<T>
+    {
+        private int currentIndex;
+
+        @Override
+        public boolean hasNext()
+        {
+            return currentIndex < nextAvailableIndex;
+        }
+
+        @Override
+        public T next()
+        {
+            //save the next element to be returned by the iterator
+            T result = dataArray[currentIndex];
+
+            //shift the iterator to the next element
+            currentIndex++;
+
+            //return the requested element
+            return result;
+        }
     }
 }
 
