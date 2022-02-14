@@ -55,7 +55,29 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     @Override
     public boolean contains(T element)
     {
-        return false;
+        return contains(root, element);
+    }
+
+    private boolean contains(TreeNode current, T element)
+    {
+        if (current == null)
+        {
+            return false;
+        }
+
+        int comparison = current.data.compareTo(element);
+        if (comparison < 0) //right
+        {
+            return contains(current.right, element);
+        }
+        else if (comparison > 0) //left
+        {
+            return contains(current.left, element);
+        }
+        else //if (comparison == 0)
+        {
+            return true;
+        }
     }
 
     @Override
@@ -67,13 +89,13 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     @Override
     public int size()
     {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty()
     {
-        return false;
+        return size == 0;
     }
 
     @Override
