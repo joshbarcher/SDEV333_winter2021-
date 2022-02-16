@@ -2,6 +2,7 @@ package trees;
 
 import org.w3c.dom.Node;
 
+import javax.swing.tree.TreeNode;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,8 +45,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     public boolean addAll(T... elements)
     {
         boolean result = true;
-        for (T element : elements)
-        {
+        for (T element : elements) {
             //only true if every call to add() is true
             result = result && add(element);
         }
@@ -60,8 +60,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
 
     private boolean contains(TreeNode current, T element)
     {
-        if (current == null)
-        {
+        if (current == null) {
             return false;
         }
 
@@ -69,12 +68,10 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
         if (comparison < 0) //right
         {
             return contains(current.right, element);
-        }
-        else if (comparison > 0) //left
+        } else if (comparison > 0) //left
         {
             return contains(current.left, element);
-        }
-        else //if (comparison == 0)
+        } else //if (comparison == 0)
         {
             return true;
         }
@@ -83,7 +80,75 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     @Override
     public boolean remove(T element)
     {
-        return false;
+        int oldSize = size;
+        root = remove(root, element);
+        return oldSize != size;
+    }
+
+    private TreeNode remove(TreeNode current, T element)
+    {
+        //we didn't find the element in the tree (base case!)
+        if (current == null)
+        {
+            return null;
+        }
+
+        int comparison = current.data.compareTo(element);
+        if (comparison < 0) //right
+        {
+            current.right = remove(current.right, element);
+        }
+        else if (comparison > 0) //left
+        {
+            current.left = remove(current.left, element);
+        }
+        else //if (comparison == 0)
+        {
+            //we found it, let's remove it! (base case!)
+
+            //no children
+            if (current.left == null && current.right == null)
+            {
+                size--;
+                return null;
+            }
+            //left child
+            else if (current.right == null)
+            {
+                size--;
+                return current.left;
+            }
+            //right
+            else if (current.left == null)
+            {
+                size--;
+                return current.right;
+            }
+            //two children
+            else
+            {
+                //find the largest element in the left subtree
+                T largestElement = findMax(current.left);
+
+                //replace the current node data with that element
+                current.data = largestElement;
+
+                //recursively delete the node with the largest
+                //element in the left subtree
+                remove(current.left, largestElement);
+            }
+        }
+        return current;
+    }
+
+    private T findMax(TreeNode current)
+    {
+        //base case?
+        if (current.right == null)
+        {
+            return current.data;
+        }
+        return findMax(current.right);
     }
 
     @Override
