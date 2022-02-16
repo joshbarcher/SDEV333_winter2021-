@@ -3,6 +3,7 @@ package trees;
 import org.w3c.dom.Node;
 
 import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +11,14 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
 {
     private TreeNode root;
     private int size;
+
+    public BinarySearchTree()
+    {
+        T[] array = (T[]) new Comparable[10];
+
+        List<T> elements = new ArrayList<>();
+        T[] anotherArray = elements.toArray((T[])new Comparable[0]);
+    }
 
     @Override
     public boolean add(T element)
