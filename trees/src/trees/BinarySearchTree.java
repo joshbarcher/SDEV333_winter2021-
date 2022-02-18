@@ -1,7 +1,5 @@
 package trees;
 
-import org.w3c.dom.Node;
-
 import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -175,16 +173,16 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     @Override
     public T min()
     {
+        if (root == null)
+        {
+            return null;
+        }
         return min(root);
     }
 
     private T min(TreeNode current)
     {
-        if (current == null)
-        {
-            return null;
-        }
-        else if (current.left == null)
+        if (current.left == null)
         {
             return current.data;
         }
@@ -194,16 +192,16 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     @Override
     public T max()
     {
+        if (root == null)
+        {
+            return null;
+        }
         return max(root);
     }
 
     private T max(TreeNode current)
     {
-        if (current == null)
-        {
-            return null;
-        }
-        else if (current.right == null)
+        if (current.right == null)
         {
             return current.data;
         }
@@ -219,47 +217,49 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     @Override
     public List<T> leafValues()
     {
-        List<T> values = new ArrayList<>();
-        leafValues(root, values);
-        return values;
+        List<T> leaves = new ArrayList<>();
+        leafValues(root, leaves);
+        return leaves;
     }
 
-    private void leafValues(TreeNode current, List<T> values)
+    private void leafValues(TreeNode current, List<T> leaves)
     {
         if (current == null)
         {
-            return; //exit!
+            return; //exit, we have reached a null reference!
         }
 
+        //is the current node a leaf node?
         if (current.left == null && current.right == null)
         {
-            values.add(current.data);
+            leaves.add(current.data);
         }
-        leafValues(current.left, values);
-        leafValues(current.right, values);
+        leafValues(current.left, leaves);
+        leafValues(current.right, leaves);
     }
 
     @Override
     public List<T> internalValues()
     {
-        List<T> values = new ArrayList<>();
-        internalValues(root, values);
-        return values;
+        List<T> internals = new ArrayList<>();
+        internalValues(root, internals);
+        return internals;
     }
 
-    private void internalValues(TreeNode current, List<T> values)
+    private void internalValues(TreeNode current, List<T> internals)
     {
         if (current == null)
         {
-            return; //exit!
+            return; //exit, we have reached a null reference!
         }
 
+        //is the current node an internal node?
         if (current.left != null || current.right != null)
         {
-            values.add(current.data);
+            internals.add(current.data);
         }
-        internalValues(current.left, values);
-        internalValues(current.right, values);
+        internalValues(current.left, internals);
+        internalValues(current.right, internals);
     }
 
     @Override
@@ -270,19 +270,23 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
 
     private void invert(TreeNode current)
     {
+        //base case!
         if (current == null)
         {
             return; //exit!
         }
 
+        //swap the left and right reference
         TreeNode temp = current.left;
         current.left = current.right;
         current.right = temp;
 
+        //recurse over all nodes in the tree
         invert(current.left);
         invert(current.right);
     }
 
+    //visits nodes in the LNR order
     @Override
     public List<T> inOrder()
     {
@@ -293,22 +297,30 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
 
     private void inOrder(TreeNode current, List<T> traversal)
     {
+        //base case
         if (current == null)
         {
             return; //exit!
         }
 
+        //visit the left child
         inOrder(current.left, traversal);
+
+        //record the current node
         traversal.add(current.data);
+
+        //visit the right child
         inOrder(current.right, traversal);
     }
 
+    //visits nodes in the NLR order
     @Override
     public List<T> preOrder()
     {
         return null;
     }
 
+    //visits nodes in the LRN order
     @Override
     public List<T> postOrder()
     {
