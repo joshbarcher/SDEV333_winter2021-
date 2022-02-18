@@ -173,9 +173,134 @@ public class BinarySearchTree<T extends Comparable<T>> implements ISearchTree<T>
     }
 
     @Override
+    public T min()
+    {
+        return min(root);
+    }
+
+    private T min(TreeNode current)
+    {
+        if (current == null)
+        {
+            return null;
+        }
+        else if (current.left == null)
+        {
+            return current.data;
+        }
+        return min(current.left);
+    }
+
+    @Override
+    public T max()
+    {
+        return max(root);
+    }
+
+    private T max(TreeNode current)
+    {
+        if (current == null)
+        {
+            return null;
+        }
+        else if (current.right == null)
+        {
+            return current.data;
+        }
+        return min(current.right);
+    }
+
+    @Override
+    public T root()
+    {
+        return root == null ? null : root.data;
+    }
+
+    @Override
+    public List<T> leafValues()
+    {
+        List<T> values = new ArrayList<>();
+        leafValues(root, values);
+        return values;
+    }
+
+    private void leafValues(TreeNode current, List<T> values)
+    {
+        if (current == null)
+        {
+            return; //exit!
+        }
+
+        if (current.left == null && current.right == null)
+        {
+            values.add(current.data);
+        }
+        leafValues(current.left, values);
+        leafValues(current.right, values);
+    }
+
+    @Override
+    public List<T> internalValues()
+    {
+        List<T> values = new ArrayList<>();
+        internalValues(root, values);
+        return values;
+    }
+
+    private void internalValues(TreeNode current, List<T> values)
+    {
+        if (current == null)
+        {
+            return; //exit!
+        }
+
+        if (current.left != null || current.right != null)
+        {
+            values.add(current.data);
+        }
+        internalValues(current.left, values);
+        internalValues(current.right, values);
+    }
+
+    @Override
+    public void invert()
+    {
+        invert(root);
+    }
+
+    private void invert(TreeNode current)
+    {
+        if (current == null)
+        {
+            return; //exit!
+        }
+
+        TreeNode temp = current.left;
+        current.left = current.right;
+        current.right = temp;
+
+        invert(current.left);
+        invert(current.right);
+    }
+
+    @Override
     public List<T> inOrder()
     {
-        return null;
+        List<T> traversal = new ArrayList<>();
+        inOrder(root, traversal);
+        return traversal;
+    }
+
+    private void inOrder(TreeNode current, List<T> traversal)
+    {
+        if (current == null)
+        {
+            return; //exit!
+        }
+
+        inOrder(current.left, traversal);
+        traversal.add(current.data);
+        inOrder(current.right, traversal);
     }
 
     @Override

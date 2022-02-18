@@ -12,6 +12,14 @@ public interface ISearchTree<T extends Comparable<T>> extends Iterable<T>
     int size();
     boolean isEmpty();
 
+    //exercises
+    T min();
+    T max();
+    T root();
+    List<T> leafValues();
+    List<T> internalValues();
+    void invert();
+
     //fancy operations
     List<T> inOrder();
     List<T> preOrder();
