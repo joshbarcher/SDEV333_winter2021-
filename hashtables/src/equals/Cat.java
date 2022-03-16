@@ -5,6 +5,8 @@ public class Cat
     private int age;
     private String name;
     private boolean longHair;
+    private int cuteLevel;
+    private double adoptionFee;
 
     public Cat(int age, String name, boolean longHair)
     {
@@ -14,15 +16,17 @@ public class Cat
     }
 
     @Override
-    public boolean equals(Object object)
+    public boolean equals(Object o)
     {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Cat cat = (Cat) object;
+        Cat cat = (Cat) o;
 
         if (age != cat.age) return false;
         if (longHair != cat.longHair) return false;
+        if (cuteLevel != cat.cuteLevel) return false;
+        if (Double.compare(cat.adoptionFee, adoptionFee) != 0) return false;
         if (name != null ? !name.equals(cat.name) : cat.name != null) return false;
 
         return true;
@@ -31,9 +35,14 @@ public class Cat
     @Override
     public int hashCode()
     {
-        int result = age;
+        int result;
+        long temp;
+        result = age;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (longHair ? 1 : 0);
+        result = 31 * result + cuteLevel;
+        temp = Double.doubleToLongBits(adoptionFee);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 }
